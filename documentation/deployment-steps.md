@@ -1,3 +1,3 @@
-# Establised Authentication Strategies
+# Established Authentication Strategies
 
 F

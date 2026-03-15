@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "check": "bash scripts/check.sh",
+    "check-env": "bash scripts/check-env.sh",
+    "deploy": "bash scripts/deploy.sh",
+    "logs": "bash scripts/logs.sh",
+    "db-backup": "bash scripts/db-backup.sh"
   },
   "keywords": [],
   "author": "Gregory Wiley",

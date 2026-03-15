@@ -24,7 +24,7 @@ const port = process.env.PORT || 3000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:4200';
 const angularDistPath = path.join(
   __dirname,
-  '../../dist/my-blog-client/browser',
+  './dist/my-blog-client/browser',
 );
 
 // --- EXPRESS SETUP ---
@@ -34,13 +34,14 @@ app.set('trust proxy', 1);
 // --- HELMET SETUP ---
 app.use(
   helmet({
-    // ✅ configure CSP rather than disable it
+    // configure CSP rather than disable it
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:'],
+        fontSrc: ["'self'"],
       },
     },
   }),
@@ -67,7 +68,7 @@ const apiLimiter = rateLimit({
   message: 'Too many requests from this IP, please try again after 15 minutes.',
 });
 
-// ✅ stricter limiter for auth routes
+// stricter limiter for auth routes
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -108,7 +109,7 @@ const startServer = async () => {
 
     // 2. sync models (create tables if missing) - ONLY IN DEVELOPMENT
     // note: in production, use Migrations instead of sync()
-    await sequelize.sync({ force: true });
+    await sequelize.sync({});
     console.log(chalk.green('Database models synced successfully.'));
 
     // 3. start listening
@@ -128,8 +129,8 @@ const startServer = async () => {
       });
     };
 
-    process.on('SIGINT', () => shutdown('SIGINT')); // ✅ ctrl+c
-    process.on('SIGTERM', () => shutdown('SIGTERM')); // ✅ cloud platform shutdown
+    process.on('SIGINT', () => shutdown('SIGINT'));
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
   } catch (error) {
     console.error(chalk.red('Failed to start server:', error));
     process.exit(1);

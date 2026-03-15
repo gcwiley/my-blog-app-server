@@ -3,7 +3,7 @@ import multer from 'multer';
 // default to 5MB, or allow override via environment variable
 const MAX_SIZE = process.env.MAX_FILE_SIZE
   ? parseInt(process.env.MAX_FILE_SIZE)
-  : 5 * 1024 + 1024;
+  : 5 * 1024 * 1024;
 
 // configure multer for file uploads
 const upload = multer({

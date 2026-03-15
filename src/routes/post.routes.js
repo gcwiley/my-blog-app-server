@@ -3,15 +3,19 @@ const router = Router();
 
 // post controller functions
 import {
-   newPost,
-   getPosts,
-   getPostById,
-   updatePostById,
-   deletePostById,
-   getRecentlyCreatedPosts,
-   getPostCount,
-   searchPosts,
+  newPost,
+  getPosts,
+  getPostsWithPagination,
+  getPostById,
+  updatePostById,
+  deletePostById,
+  getRecentlyCreatedPosts,
+  getPostCount,
+  searchPosts,
 } from '../controllers/post.controller.js';
+
+// import auth middleware
+import { authenticateToken } from '../middleware/auth.middleware.js';
 
 // GET /api/posts/count - count all posts
 router.get('/count', getPostCount);
@@ -27,15 +31,15 @@ router.get('/search', searchPosts);
 router.get('/:id', getPostById);
 
 // POST /api/posts - create new post
-router.post('/', newPost);
+router.post('/', authenticateToken, newPost);
 
 // GET /api/posts - get all posts
-router.get('/', getPosts);
+router.get('/', getPostsWithPagination);
 
 // PATCH /api/posts/:id - update post by ID
-router.patch('/:id', updatePostById);
+router.patch('/:id', authenticateToken, updatePostById);
 
 // DELETE /api/posts/:id - delete post by ID
-router.delete('/:id', deletePostById);
+router.delete('/:id', authenticateToken, deletePostById);
 
 export { router as postRouter };

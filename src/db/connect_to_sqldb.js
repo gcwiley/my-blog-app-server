@@ -31,7 +31,7 @@ if (!database || !username || !password || !host) {
 const dialectOptions = isProduction ? {
   ssl: {
     require: true,
-    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== false,
+    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
   },
 } : {};
 
