@@ -146,7 +146,7 @@ export const updatePostById = async (req, res) => {
       body: req.body.body,
       category: req.body.category,
       favorite: req.body.favorite,
-      date: new Date(req.body.date),
+      date: req.body.date ? new Date(req.body.date) : undefined,
     });
 
     res.status(200).json({

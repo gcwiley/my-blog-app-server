@@ -4,7 +4,7 @@ import { sequelize } from '../db/connect_to_sqldb.js';
 const User = sequelize.define(
   'User',
   {
-    // ✅ UUID consistent with post.model.js
+    // UUID consistent with post.model.js
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -34,19 +34,19 @@ const User = sequelize.define(
   },
   {
     timestamps: true,
-    // ✅ modern pattern — excludes password from all queries by default
+    // modern pattern — excludes password from all queries by default
     defaultScope: {
       attributes: { exclude: ['password'] },
     },
-    // ✅ unscoped() available when password IS needed e.g. sign in
+    // unscoped() available when password IS needed e.g. sign in
     scopes: {
       withPassword: {
         attributes: { include: ['password'] },
       },
     },
     indexes: [
-      { fields: ['username'] }, // ✅ fast username lookup on sign in
-      { fields: ['email'] },    // ✅ fast email lookup on register
+      { fields: ['username'] }, // fast username lookup on sign in
+      { fields: ['email'] },    // fast email lookup on register
     ],
   }
 );

@@ -7,7 +7,7 @@ if (!JWT_SECRET) {
 }
 
 export const authenticateToken = (req, res, next) => {
-  // reg.get() is the express-preferred way to read headers case-insensitively
+  // req.get() is the express-preferred way to read headers case-insensitively
   const authHeader = req.get('Authorization');
 
   // ensure the header exists and explicitly starts with 'Bearer '
@@ -15,7 +15,7 @@ export const authenticateToken = (req, res, next) => {
     return res.status(401).json({ error: 'Access denied. No token provided.' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.slice(7).trim();
 
   jwt.verify(token, JWT_SECRET, (error, user) => {
     if (error) {

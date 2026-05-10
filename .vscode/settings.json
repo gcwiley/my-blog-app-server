@@ -4,7 +4,7 @@
   // turns the minimap off
   "editor.minimap.enabled": false,
   // set default dark theme
-  "workbench.preferredDarkColorTheme": "Default Dark Modern",
+  "workbench.preferredDarkColorTheme": "Dark Modern",
   // set prettier as the default formatter for all languages
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   // enable format on save
@@ -16,5 +16,5 @@
   // sets the theme to material icon theme
   "workbench.iconTheme": "material-icon-theme",
   // list of words considered correct
-  "cSpell.words": ["appspot", "sqldb"]
+  "cSpell.words": ["appspot", "cloudsql", "gcwiley", "Indf", "sqldb"]
 }

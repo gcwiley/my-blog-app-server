@@ -7,12 +7,13 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 
+// -- DATABASE ---
 import { sequelize, connectToDatabase } from './db/connect_to_sqldb.js';
 
 // explicit model imports guarantee associations load
 import './models/index.js';
 
-// IMPORT ROUTERS
+// --- IMPORT ROUTERS --- 
 import { postRouter } from './routes/post.routes.js';
 import { userRouter } from './routes/user.routes.js';
 import { authRouter } from './routes/auth.routes.js';
@@ -31,10 +32,9 @@ const angularDistPath = path.join(
 const app = express();
 app.set('trust proxy', 1);
 
-// --- HELMET SETUP ---
+// --- HELMET ---
 app.use(
   helmet({
-    // configure CSP rather than disable it
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
@@ -47,16 +47,22 @@ app.use(
   }),
 );
 
-// --- CORS SETUP ---
+// --- CORS ---
 app.use(
   cors({
     origin: CORS_ORIGIN,
     credentials: true,
   }),
 );
+
+// --- MORGAN LOGGER ---
 app.use(logger('dev'));
+
+// --- BODY PARSERS ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// --- STATIC FILES ---
 app.use(express.static(angularDistPath));
 
 // --- API RATE LIMITING ---
@@ -98,7 +104,7 @@ app.use((error, req, res, next) => {
   }
   res
     .status(500)
-    .json({ error: 'Internal Server Error', message: error.message });
+    .json({ error: 'Internal Server Error' });
 });
 
 // --- STARTUP SEQUENCE ---
@@ -107,8 +113,7 @@ const startServer = async () => {
     // 1. establish DB connection
     await connectToDatabase();
 
-    // 2. sync models (create tables if missing) - ONLY IN DEVELOPMENT
-    // note: in production, use Migrations instead of sync()
+    // 2. sync models (create tables if missing)
     await sequelize.sync({});
     console.log(chalk.green('Database models synced successfully.'));
 

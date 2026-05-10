@@ -35,7 +35,7 @@ export const updateUserProfile = async (req, res) => {
 
     if (username != null) updates.username = username;
     if (email != null) updates.email = email;
-    if (password != null) updates.password = await bcrypt.hash(password, 12);
+    if (password != null) updates.password = await bcrypt.hash(password, 10);
 
     // ✅ guard against empty update body
     if (Object.keys(updates).length === 0) {
