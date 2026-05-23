@@ -10,6 +10,7 @@ const User = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    // unique username for each user
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,6 +19,7 @@ const User = sequelize.define(
         notEmpty: true,
       },
     },
+    // unique email for each user
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -27,6 +29,7 @@ const User = sequelize.define(
         notEmpty: true,
       },
     },
+    // Password field (hashed in practice, but just a string here for simplicity)
     password: {
       type: DataTypes.STRING,
       allowNull: false,

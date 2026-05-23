@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { registerNewUser, signInUser, signOutUser } from '../controllers/auth.controller.js';
 
+// --- AUTH ROUTER ---
 export const authRouter = Router();
 
 // POST /api/auth/register

@@ -5,14 +5,9 @@ instance_class: F1
 automatic_scaling:
   min_instances: 0
   max_instances: 5
-  target_cpu_utilization: 0.65
+  target_cpu_utilization: 0.80
   max_concurrent_requests: 10
 
 env_variables:
-  NODE_ENV: "production"
-  INSTANCE_UNIX_SOCKET: /cloudsql/personal-blog-490318:us-east4:database
-  DB_USER: "gcwiley"
-  DB_PASSWORD: "g6KJ51J84@1033"
-  DB_NAME: "personal-blog"
-  JWT_SECRET: "71fefcb7ee8dd1f16bd697ad4b963f0474447cd41624d87376f90809007765b77207201e6a53753616c5d0ef5b4b48326a2e53cb5daa422b144bf358767bf17d"
-  CORS_ORIGIN: "https://personal-blog-490318.ue.r.appspot.com"
+  NODE_ENV: 'production'
+  INSTANCE_UNIX_SOCKET: YOUR_PROJECT:YOUR_REGION:YOUR_INSTANCE_NAME

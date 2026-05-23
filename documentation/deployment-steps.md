@@ -1,3 +1,0 @@
-# Established Authentication Strategies
-
-F

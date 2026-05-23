@@ -40,6 +40,7 @@ export const registerNewUser = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
+      algorithm: 'HS256',
     });
 
     res.status(201).json({

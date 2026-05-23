@@ -16,5 +16,5 @@
   // sets the theme to material icon theme
   "workbench.iconTheme": "material-icon-theme",
   // list of words considered correct
-  "cSpell.words": ["appspot", "cloudsql", "gcwiley", "Indf", "sqldb"]
+  "cSpell.words": ["appspot", "cloudsql", "gcwiley", "Indf", "sqldb", "UUIDV"]
 }

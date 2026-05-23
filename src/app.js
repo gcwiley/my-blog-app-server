@@ -13,7 +13,7 @@ import { sequelize, connectToDatabase } from './db/connect_to_sqldb.js';
 // explicit model imports guarantee associations load
 import './models/index.js';
 
-// --- IMPORT ROUTERS --- 
+// --- IMPORT ROUTERS ---
 import { postRouter } from './routes/post.routes.js';
 import { userRouter } from './routes/user.routes.js';
 import { authRouter } from './routes/auth.routes.js';
@@ -21,15 +21,15 @@ import { authRouter } from './routes/auth.routes.js';
 // --- CONFIGURATION ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+// CORS origin for Angular client (adjust as needed for production)
 const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:4200';
-const angularDistPath = path.join(
-  __dirname,
-  './dist/my-blog-client/browser',
-);
+const angularDistPath = path.join(__dirname, './dist/my-blog-client/browser');
 
 // --- EXPRESS SETUP ---
+// create express app instance
 const app = express();
+// trust first proxy for secure cookies when behind a proxy (e.g. GAE)
 app.set('trust proxy', 1);
 
 // --- HELMET ---
@@ -51,12 +51,13 @@ app.use(
 app.use(
   cors({
     origin: CORS_ORIGIN,
+    // allow credentials (cookies) to be sent in cross-origin requests
     credentials: true,
   }),
 );
 
 // --- MORGAN LOGGER ---
-app.use(logger('dev'));
+app.use(logger(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // --- BODY PARSERS ---
 app.use(express.json());
@@ -91,6 +92,7 @@ app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/users', userRouter);
 
+// catch-all route to serve Angular app for any non-API routes (for client-side routing)
 app.get('{*splat}', (req, res) => {
   res.sendFile(path.join(angularDistPath, 'index.html'));
 });
@@ -102,9 +104,7 @@ app.use((error, req, res, next) => {
   if (res.headersSent) {
     return next(error);
   }
-  res
-    .status(500)
-    .json({ error: 'Internal Server Error' });
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // --- STARTUP SEQUENCE ---
@@ -113,13 +113,15 @@ const startServer = async () => {
     // 1. establish DB connection
     await connectToDatabase();
 
-    // 2. sync models (create tables if missing)
-    await sequelize.sync({});
-    console.log(chalk.green('Database models synced successfully.'));
+    // 2. sync models
+    if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync({});
+      console.log(chalk.green('Database models synced successfully.'));
+    }
 
-    // 3. start listening
-    const server = app.listen(port, () => {
-      console.log(chalk.blueBright(`\nServer running on port ${port}\n`));
+    // 3. start listening for requests
+    const server = app.listen(PORT, () => {
+      console.log(chalk.blueBright(`\nServer running on port ${PORT}\n`));
     });
 
     // 4. graceful shutdown — handle both SIGINT and SIGTERM

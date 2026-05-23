@@ -11,7 +11,7 @@ const Post = sequelize.define(
          defaultValue: DataTypes.UUIDV4,
          primaryKey: true,
       },
-      // title
+      // title of the post
       title: {
          type: DataTypes.STRING,
          allowNull: false,
@@ -29,19 +29,19 @@ const Post = sequelize.define(
          type: DataTypes.TEXT,
          allowNull: false,
       },
-      // category 
+      // category
       category: {
          type: DataTypes.STRING,
          allowNull: false,
          validate: { notEmpty: true },
       },
-      // favorite
+      // favorite flag to mark a post as a favorite
       favorite: {
          type: DataTypes.BOOLEAN,
          defaultValue: false, // provide a default value of false
       },
-      // date of post
-      date: {
+      // date of post creation or publication
+      publishedDate: {
          type: DataTypes.DATE,
          allowNull: false, // ensures the date is not null
          defaultValue: DataTypes.NOW, // set the default date to now

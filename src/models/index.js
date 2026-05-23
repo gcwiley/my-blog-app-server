@@ -2,8 +2,9 @@ import { Post } from './post.model.js';
 import { User } from './user.model.js';
 
 // --- ASSOCIATIONS ---
-// ready to define when needed e.g.:
-// User.hasMany(Post, { foreignKey: 'authorId' });
-// Post.belongsTo(User, { foreignKey: 'authorId' });
+// A User can have many Posts, and a Post belongs to one User (the author)
+User.hasMany(Post, { foreignKey: 'authorId' });
+// A Post belongs to a User (the author)
+Post.belongsTo(User, { foreignKey: 'authorId' });
 
 export { Post, User };
