@@ -16,14 +16,6 @@ const Post = sequelize.define(
          type: DataTypes.STRING,
          allowNull: false,
       },
-      // author
-      author: {
-         type: DataTypes.STRING,
-         allowNull: false,
-         validate: {
-            notEmpty: true,
-         },
-      },
       // body
       body: {
          type: DataTypes.TEXT,
@@ -40,7 +32,7 @@ const Post = sequelize.define(
          type: DataTypes.BOOLEAN,
          defaultValue: false, // provide a default value of false
       },
-      // date of post creation or publication
+      // date of post publication
       publishedDate: {
          type: DataTypes.DATE,
          allowNull: false, // ensures the date is not null
@@ -54,10 +46,10 @@ const Post = sequelize.define(
       timestamps: true,
       indexes: [
          {
-            fields: ['author', 'category'], // adds a composite index on the 'author' column
+            fields: ['authorId', 'category'], // adds a composite index on the 'author' column
          },
          {
-            fields: ['date'], // index on date for efficient querying by date
+            fields: ['publishedDate'], // index on date for efficient querying by date
          },
          {
             fields: ['favorite'],

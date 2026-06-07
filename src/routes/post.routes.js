@@ -5,7 +5,6 @@ const router = Router();
 import {
   newPost,
   getPosts,
-  getPostsWithPagination,
   getPostById,
   updatePostById,
   deletePostById,
@@ -34,7 +33,7 @@ router.get('/:id', getPostById);
 router.post('/', authenticateToken, newPost);
 
 // GET /api/posts - get all posts
-router.get('/', getPostsWithPagination);
+router.get('/', getPosts);
 
 // PATCH /api/posts/:id - update post by ID
 router.patch('/:id', authenticateToken, updatePostById);

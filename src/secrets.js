@@ -1,20 +1,25 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
-// create the secret manager client
-const client = new SecretManagerServiceClient();
+// singleton pattern for Secret Manager client
+let client;
 
-// get the secret value from Google Secret Manager
-export async function getSecret(secretName, version = 'latest') {
-  const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-  // ensure the project ID is available to prevent constructing an invalid resource name
+export async function getSecret(secretName) {
+  // initialize client if it doesn't exist.
+  if (!client) {
+    client = new SecretManagerServiceClient()
+  }
+  // allow overriding the project ID if secrets are located in a different GCP project
+  const projectId =
+    process.env.SECRETS_PROJECT_ID || process.env.GOOGLE_CLOUD_PROJECT;
   if (!projectId) {
-    throw new Error('GOOGLE_CLOUD_PROJECT environment variable is not set.');
+    // throw an error if the project ID is not set, since it is required to access secrets
+    throw new Error(
+      'Neither SECRETS_PROJECT_ID nor GOOGLE_CLOUD_PROJECT environment variable is set.',
+    );
   }
 
-  // construct the full resource name for the secret version
-  const name = `projects/${projectId}/secrets/${secretName}/versions/${version}`;
+  const name = `projects/${projectId}/secrets/${secretName}/versions/latest`;
 
-  // access the secret version and retrieve the payload
   const [response] = await client.accessSecretVersion({ name });
   return response.payload.data.toString('utf8');
 }
@@ -32,5 +37,14 @@ export async function loadSecrets() {
     console.log('Secret loaded from Google Secret Manager.');
   } else {
     console.log('Using local .env file for secrets.');
+  }
+}
+
+// load all required secrets into process.env concurrently
+export async function loadSecrets() {
+  // only load secrets from Secret Manager in production (GCP App Engine)
+  if (process.env.NODE.ENV === 'production' || process.env.GAE_ENV) {
+    // fetch all secrets in parallel
+    
   }
 }

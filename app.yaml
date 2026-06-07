@@ -5,9 +5,11 @@ instance_class: F1
 automatic_scaling:
   min_instances: 0
   max_instances: 5
-  target_cpu_utilization: 0.80
+  target_cpu_utilization: 0.65
   max_concurrent_requests: 10
 
 env_variables:
   NODE_ENV: 'production'
-  INSTANCE_UNIX_SOCKET: YOUR_PROJECT:YOUR_REGION:YOUR_INSTANCE_NAME
+  SECRETS_PROJECT_ID: 'lyrical-amulet-495920-u8' # add the project ID hosting the secrets here
+  INSTANCE_CONNECTION_NAME: 'lyrical-amulet-495920-u8:us-east4:postgresql'
+

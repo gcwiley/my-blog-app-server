@@ -7,14 +7,14 @@ import { isValidUUID } from '../helpers/validate.js';
 // CREATE NEW POST
 export const newPost = async (req, res) => {
   try {
-    const { title, author, body, category, favorite, date } = req.body;
+    const { title, author, body, category, favorite, publishedDate } = req.body;
     const post = await Post.create({
       title,
       author,
       body,
       category,
       favorite,
-      date: new Date(date),
+      publishedDate: new Date(publishedDate),
     });
     res.status(201).json({
       success: true,
@@ -31,46 +31,21 @@ export const newPost = async (req, res) => {
   }
 };
 
-// GET POSTS
+// GET POSTS (WITH PAGINATION)
 export const getPosts = async (req, res) => {
   try {
-    // retrieve all posts ordered by date (most recent first_
-    const posts = await Post.findAll({
-      order: [['date', 'DESC']], // order posts by date
-    });
-
-    // if no posts are found
-    if (posts.length === 0) {
-      return res
-        .status(200)
-        .json({ success: false, message: 'No posts found.' });
-    }
-
-    // send the list of posts to the client
-    res.status(200).json({
-      success: true,
-      message: 'Successfully fetched all posts.',
-      data: posts,
-    });
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching posts.',
-      error: error.message,
-    });
-  }
-};
-
-// GET POSTS WITH PAGINATION
-export const getPostsWithPagination = async (req, res) => {
-  try {
+    // parse pagination parameters from query string, with default values
     const page = parseInt(req.query.page, 10) || 1;
+    // set a default limit of 10 posts per page if not provided
     const limit = parseInt(req.query.limit, 10) || 10;
+    // calculate the offset for pagination
     const offset = (page - 1) * limit;
 
+    // use findAndCountAll to get both the total count and the paginated posts
     const { count, rows: posts } = await Post.findAndCountAll({
-      order: [['date', 'DESC']],
+      // order posts by date in descending order (most recent first)
+      order: [['publishedDate', 'DESC']],
+      // apply pagination using limit and offset
       limit,
       offset,
     });
@@ -101,6 +76,7 @@ export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // validate the ID format before querying the database
     if (!isValidUUID(id)) {
       return res
         .status(400)
@@ -146,7 +122,7 @@ export const updatePostById = async (req, res) => {
       body: req.body.body,
       category: req.body.category,
       favorite: req.body.favorite,
-      date: req.body.date ? new Date(req.body.date) : undefined,
+      publishedDate: req.body.publishedDate ? new Date(req.body.publishedDate) : undefined,
     });
 
     res.status(200).json({
@@ -216,7 +192,7 @@ export const getPostCount = async (req, res) => {
 export const getRecentlyCreatedPosts = async (req, res) => {
   try {
     const mostRecentPosts = await Post.findAll({
-      order: [['date', 'DESC']],
+      order: [['publishedDate', 'DESC']],
       limit: 5,
     });
 
@@ -261,7 +237,6 @@ export const searchPosts = async (req, res) => {
         [Op.or]: [
           // uses the 'Op.iLike' operator for case-insensitive search
           { title: { [Op.iLike]: `%${query}%` } },
-          { date: { [Op.iLike]: `%${query}%` } },
           { category: { [Op.iLike]: `%${query}%` } },
         ],
       },

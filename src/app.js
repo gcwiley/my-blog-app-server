@@ -7,8 +7,13 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 
-// -- DATABASE ---
-import { sequelize, connectToDatabase } from './db/connect_to_sqldb.js';
+// load secrets first
+import { loadSecrets } from './secrets.js';
+await loadSecrets();
+
+// dynamically import
+const { sequelize, connectToDatabase } =
+  await import('./db/connect_to_sqldb.js');
 
 // explicit model imports guarantee associations load
 import './models/index.js';
@@ -38,10 +43,15 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
+        scriptSrc: ["'self'"], // add hashes here if Angular inline scripts are blocked
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:'],
-        fontSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'blob:'], // blob: added for NgOptimizedImage
+        fontSrc: ["'self'", 'data:'], // data: for inlined base64 fonts
+        connectSrc: ["'self'"], // explicit (was falling back to default-src)
+        objectSrc: ["'none'"], // security best practice
+        baseUri: ["'self'"], // prevents <base> tag injection
+        formAction: ["'self'"],
+        frameAncestors: ["'none'"],
       },
     },
   }),
@@ -60,8 +70,8 @@ app.use(
 app.use(logger(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // --- BODY PARSERS ---
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 
 // --- STATIC FILES ---
 app.use(express.static(angularDistPath));
@@ -115,7 +125,7 @@ const startServer = async () => {
 
     // 2. sync models
     if (process.env.NODE_ENV !== 'production') {
-      await sequelize.sync({});
+      await sequelize.sync({ alter: true });
       console.log(chalk.green('Database models synced successfully.'));
     }
 
