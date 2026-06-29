@@ -113,11 +113,12 @@ app.use((error, req, res, next) => {
 // --- STARTUP SEQUENCE ---
 const startServer = async () => {
   try {
-    // 1. establish DB connection
+    // 1. establish DB connection 
     await connectToDatabase();
 
     // 2. sync models
     if (process.env.NODE_ENV !== 'production') {
+      // in development, sync models with the database (alter tables to match models)
       await sequelize.sync({ alter: true });
       console.log(chalk.green('Database models synced successfully.'));
     }

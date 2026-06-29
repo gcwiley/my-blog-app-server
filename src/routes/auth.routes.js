@@ -5,9 +5,11 @@ import { registerNewUser, signInUser, signOutUser } from '../controllers/auth.co
 export const authRouter = Router();
 
 // POST /api/auth/register
+// Route to register a new user
 authRouter.post('/register', registerNewUser);
 
 // POST /api/auth/signin
+// Route to sign in an existing user
 authRouter.post('/signin', signInUser);
 
 // POST /api/auth/signout

@@ -14,14 +14,14 @@ export const getUserProfile = async (req, res) => {
     // toJSON() on model strips password automatically
     res.status(200).json({
       success: true,
-      message: 'Successfully fetched profile.',
+      message: 'Successfully fetched user profile.',
       data: user,
     });
   } catch (error) {
     console.error('Error fetching profile:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching profile.',
+      message: 'Error fetching user profile.',
       error: error.message,
     });
   }
@@ -37,7 +37,7 @@ export const updateUserProfile = async (req, res) => {
     if (email != null) updates.email = email;
     if (password != null) updates.password = await bcrypt.hash(password, 10);
 
-    // ✅ guard against empty update body
+    // guard against empty update body
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({
         success: false,
@@ -45,7 +45,7 @@ export const updateUserProfile = async (req, res) => {
       });
     }
 
-    // ✅ confirm user exists before updating
+    // confirm user exists before updating
     const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({
@@ -71,7 +71,7 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
-// DELETE USER ACCOUNT
+// DELETE USER PROFILE
 export const deleteUserProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id);
