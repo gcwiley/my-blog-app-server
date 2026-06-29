@@ -6,7 +6,7 @@ let client;
 export async function getSecret(secretName) {
   // initialize client if it doesn't exist.
   if (!client) {
-    client = new SecretManagerServiceClient()
+    client = new SecretManagerServiceClient();
   }
   // allow overriding the project ID if secrets are located in a different GCP project
   const projectId =
@@ -27,24 +27,13 @@ export async function getSecret(secretName) {
 // load all required secrets into process.env
 export async function loadSecrets() {
   if (process.env.NODE_ENV === 'production' || process.env.GAE_ENV) {
-    process.env.DB_NAME = await getSecret('DB_NAME');
-    process.env.DB_USER = await getSecret('DB_USER');
-    process.env.DB_PASSWORD = await getSecret('DB_PASSWORD');
-    process.env.CLOUD_SQL_CONNECTION_NAME = await getSecret(
-      'CLOUD_SQL_CONNECTION_NAME'
-    );
+    process.env.PGSQL_DB_NAME = await getSecret('PGSQL_DB_NAME');
+    process.env.PGSQL_DB_USER = await getSecret('PGSQL_DB_USER');
+    process.env.PGSQL_DB_PASSWORD = await getSecret('PGSQL_DB_PASSWORD');
+    process.env.JWT_SECRET = await getSecret('JWT_SECRET');
     process.env.CORS_ORIGIN = await getSecret('CORS_ORIGIN');
     console.log('Secret loaded from Google Secret Manager.');
   } else {
     console.log('Using local .env file for secrets.');
-  }
-}
-
-// load all required secrets into process.env concurrently
-export async function loadSecrets() {
-  // only load secrets from Secret Manager in production (GCP App Engine)
-  if (process.env.NODE.ENV === 'production' || process.env.GAE_ENV) {
-    // fetch all secrets in parallel
-    
   }
 }

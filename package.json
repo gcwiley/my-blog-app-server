@@ -1,19 +1,14 @@
 {
-  "name": "my-blog-server",
+  "name": "personal-blog-server",
   "version": "1.0.0",
   "description": "My personal blog web application.",
   "main": "app.js",
   "scripts": {
-    "start": "node --env-file=.env src/app.js",
-    "dev": "node --env-file=.env --watch src/app.js",
-    "check": "bash scripts/check.sh",
-    "check-env": "bash scripts/check-env.sh",
-    "deploy": "bash scripts/deploy.sh",
-    "logs": "bash scripts/logs.sh",
-    "db-backup": "bash scripts/db-backup.sh"
+    "start": "node src/server.js",
+    "dev": "node --env-file=.env --watch src/server.js"
   },
   "keywords": [],
-  "author": "Gregory Wiley",
+  "author": "Greg Wiley",
   "license": "MIT",
   "type": "module",
   "dependencies": {

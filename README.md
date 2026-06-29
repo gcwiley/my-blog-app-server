@@ -1,4 +1,4 @@
-# My Blog Web Application
+# Personal Blog Web Application
 
 ## Overview
 

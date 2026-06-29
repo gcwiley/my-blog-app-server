@@ -1,15 +1,21 @@
+# This is the configuration file for deploying the Node.js application to Google App Engine.
+# The runtime specifies the Node.js version to use. Node.js 24 is the latest LTS version as of this writing.
 runtime: nodejs24
 
+# The instance class defines the amount of memory and CPU available to your application.
+# F1 is the smallest instance class, suitable for low-traffic applications. You can adjust this based on your app's performance needs and budget.
 instance_class: F1
 
 automatic_scaling:
-  min_instances: 0
-  max_instances: 5
-  target_cpu_utilization: 0.65
+  min_instances: 0 # Set to 0 to allow the app to scale down to zero when not in use
+  max_instances: 5 # Adjust this based on your expected traffic and budget
+  target_cpu_utilization: 0.65 # Adjust this based on your app's performance characteristics
   max_concurrent_requests: 10
+
+beta_settings:
+  cloud_sql_instances: 'lyrical-amulet-495920-u8:us-east4:postgresql'
 
 env_variables:
   NODE_ENV: 'production'
   SECRETS_PROJECT_ID: 'lyrical-amulet-495920-u8' # add the project ID hosting the secrets here
   INSTANCE_CONNECTION_NAME: 'lyrical-amulet-495920-u8:us-east4:postgresql'
-

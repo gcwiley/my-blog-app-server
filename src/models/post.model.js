@@ -1,34 +1,34 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../db/connect_to_sqldb.js';
 
-// define the post model
+// define the post model with the specified fields and constraints
 const Post = sequelize.define(
    'Post',
    {
-      // id - unique identifier (UUID)
+      // id - unique identifier (UUID) 
       id: {
          type: DataTypes.UUID,
          defaultValue: DataTypes.UUIDV4,
          primaryKey: true,
       },
-      // title of the post
+      // title of the post (should not be null)
       title: {
          type: DataTypes.STRING,
          allowNull: false,
       },
-      // body
+      // body content of the post
       body: {
          type: DataTypes.TEXT,
          allowNull: false,
       },
-      // category
+      // category to classify the post (e.g., technology, lifestyle, etc.)
       category: {
          type: DataTypes.STRING,
          allowNull: false,
          validate: { notEmpty: true },
       },
       // favorite flag to mark a post as a favorite
-      favorite: {
+      isFavorite: {
          type: DataTypes.BOOLEAN,
          defaultValue: false, // provide a default value of false
       },
@@ -43,7 +43,9 @@ const Post = sequelize.define(
       },
    },
    {
+      // enable timestamps for createdAt and updatedAt fields
       timestamps: true,
+      // define indexes for efficient querying
       indexes: [
          {
             fields: ['authorId', 'category'], // adds a composite index on the 'author' column
@@ -52,7 +54,7 @@ const Post = sequelize.define(
             fields: ['publishedDate'], // index on date for efficient querying by date
          },
          {
-            fields: ['favorite'],
+            fields: ['isFavorite'],
          },
       ],
    }

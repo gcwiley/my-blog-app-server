@@ -1,10 +1,31 @@
+import { Attachment } from './attachment.model.js';
 import { Post } from './post.model.js';
 import { User } from './user.model.js';
 
 // --- ASSOCIATIONS ---
-// A User can have many Posts, and a Post belongs to one User (the author)
+// User-Post relationship
 User.hasMany(Post, { foreignKey: 'authorId' });
-// A Post belongs to a User (the author)
 Post.belongsTo(User, { foreignKey: 'authorId' });
 
-export { Post, User };
+// Post-Attachment relationship
+Post.hasMany(Attachment, {
+    foreignKey: 'postId',
+    as: 'attachments',
+    onDelete: 'CASCADE'
+});
+Attachment.belongsTo(Post, {
+    foreignKey: 'uploadedBy',
+    as: 'post',
+})
+
+// User-Attachment relationship (tracks who uploaded)
+User.hasMany(Attachment, {
+    foreignKey: 'uploadedBy',
+    as: 'uploadedAttachments'
+});
+Attachment.belongsTo(User, {
+    foreignKey: 'uploadedBy',
+    as: 'uploadedAttachments',
+});
+
+export { Attachment, Post, User };

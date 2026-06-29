@@ -7,15 +7,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 
-// load secrets first
-import { loadSecrets } from './secrets.js';
-await loadSecrets();
-
-// dynamically import
-const { sequelize, connectToDatabase } =
-  await import('./db/connect_to_sqldb.js');
-
-// explicit model imports guarantee associations load
+import { sequelize, connectToDatabase } from './db/connect_to_sqldb.js';
 import './models/index.js';
 
 // --- IMPORT ROUTERS ---
@@ -44,6 +36,7 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"], // add hashes here if Angular inline scripts are blocked
+        scriptSrcAttr: ["'unsafe-inline'"], // allows inline event handlers (e.g. onclick) from Angular/libraries; fix at source when possible
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:', 'blob:'], // blob: added for NgOptimizedImage
         fontSrc: ["'self'", 'data:'], // data: for inlined base64 fonts
